@@ -1,9 +1,12 @@
 #include "head.h"
 #include "login.h"
+#include "characters.h"
 
 pthread_cond_t pth_do = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int pth_simble = 0;
+
+string name;
 
 void* readthread(void* arg)
 {
@@ -49,9 +52,17 @@ int main()
 
     cout << "欢迎进入游戏！" << endl;
 
-    ret = 0;
-    while(ret == 0)
-        ret = login(sockfd);
+	while(ret == 0)
+	{
+		ret = login(sockfd);	
+		if(ret == 1)
+		{/*
+			while(can_character == 0)
+			{
+				name = character(sockfd);
+			}		*/	
+		}		
+	}
 
 	return 0;
 }

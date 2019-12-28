@@ -14,11 +14,11 @@ local function echo(cID, addr)
 
             if str == "register" then
                 socket.write(cID, "ok")
-                login.register_init(cID, addr)
+                login.register_init(cID)
 
             elseif str == "signin" then
                 socket.write(cID, "ok")
-                login.signin(cID, addr)
+                login.signin(cID)
 
             end
 		else
