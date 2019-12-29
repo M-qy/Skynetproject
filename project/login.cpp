@@ -1,9 +1,12 @@
 #include "login.h"
 
+using namespace std;
+
 void Register(int sockfd)
 {
     string account, password;
     string str;
+    int n = 0;
     char buf[MAXLINE];
 
     pth_simble = 1;
@@ -22,17 +25,31 @@ void Register(int sockfd)
             continue;
         }
         write(sockfd, account.c_str(), account.size());
-        read(sockfd, buf, MAXLINE);
+        memset(buf, 0, MAXLINE);
+        n = read(sockfd, buf, MAXLINE);
+        if(n == 0)
+		{
+			printf("The other side has been closed\n");
+			close(sockfd);
+			exit(0);
+		}
         str = buf;
-        while(str != "ok");
+        while(str != "success");
         cout << "请输入密码：";
         cin >> password;
         write(sockfd, password.c_str(), password.size());
-        read(sockfd, buf, MAXLINE);
+        memset(buf, 0, MAXLINE);
+        n = read(sockfd, buf, MAXLINE);
+        if(n == 0)
+		{
+			printf("The other side has been closed\n");
+			close(sockfd);
+			exit(0);
+		}
         str = buf;
         if(str == "default")
         {
-            cout << "账号已存在或输入错误！" << endl;
+            cout << "账号已存在或输入错误！\n" << endl;
             continue;
         }         
         else
@@ -50,6 +67,7 @@ int Sign_in(int sockfd)
 {
     string account, password;
     string str;
+    int n = 0;
     char buf[MAXLINE];
 
     pth_simble = 1;
@@ -60,14 +78,25 @@ int Sign_in(int sockfd)
     cout << "请输入账号：";
     cin >> account;
     write(sockfd, account.c_str(), account.size());
-    read(sockfd, buf, MAXLINE);
+    n = read(sockfd, buf, MAXLINE);
+    if(n == 0)
+    {
+        printf("The other side has been closed\n");
+        close(sockfd);
+        exit(0);
+    }
     str = buf;
-    cout << buf << endl;
-    //while(str != "ok");
     cout << "请输入密码：";
     cin >> password;
     write(sockfd, password.c_str(), password.size());
-    read(sockfd, buf, MAXLINE);
+    memset(buf, 0, MAXLINE);
+    n = read(sockfd, buf, MAXLINE);
+    if(n == 0)
+    {
+        printf("The other side has been closed\n");
+        close(sockfd);
+        exit(0);
+    }
     str = buf;
     if(str == "default")
     {
@@ -78,10 +107,11 @@ int Sign_in(int sockfd)
     }
     else
     {
-        cout << "登陆成功！" << endl;
+        cout << "登录成功！" << endl;
         pth_simble = 0;
         pthread_mutex_unlock(&lock);
-        return 1;
+        int ret = atoi(account.c_str());
+        return ret;
     }             
 }
 
@@ -89,15 +119,13 @@ int login(int sockfd)
 {
     int select, ret;
 
-    cout << "\n0、离开游戏 1、登陆游戏 2、注册账号" << endl;
+    cout << "\n1、登录游戏 2、注册账号" << endl;
     cin >> select;
     switch(select)
     {
-    case 0:
-        exit(0);
     case 1:
         ret = Sign_in(sockfd);
-        return 1;
+        return ret;
     case 2:
         Register(sockfd);
         return 0;

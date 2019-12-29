@@ -4,6 +4,8 @@
 #include "head.h"
 #include "characters.h"
 
+using namespace std;
+
 class Armor
 {
     int m_blood;

@@ -2,6 +2,7 @@ local skynet = require "skynet"
 local socket = require "skynet.socket"
 local mysql = require "skynet.db.mysql"
 local login = require "login"
+local character = require "character"
 
 local function echo(cID, addr)
 	socket.start(cID)
@@ -18,9 +19,16 @@ local function echo(cID, addr)
 
             elseif str == "signin" then
                 socket.write(cID, "ok")
-                login.signin(cID)
+				login.signin(cID)
+				
+			elseif str == "character" then
+				socket.write(cID, "ok")
+				skynet.sleep(5)
+				socket.write(cID, "success")
+				character.read(cID)
 
-            end
+			end
+
 		else
 			socket.close(cID)
 			skynet.error(addr.." disconnect")

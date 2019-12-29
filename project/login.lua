@@ -1,80 +1,42 @@
 local skynet = require "skynet"
 local socket = require "skynet.socket"
-local mysql = require "skynet.db.mysql"
+local mysql = require "mysql"
 
-login = {}
-
-local function dump(res, tab)
-	tab = tab or 0
-	if tab == 0 then
-		skynet.error("............dump...........")
-	end
-	if type(res) == "table" then
-		skynet.error(string.rep("\t", tab).."{")
-		for k, v in pairs(res) do
-			if type(v) == "table" then
-				dump(v, tab + 1)
-			else
-				skynet.error(string.rep("\t", tab), k, "=", v, ",")
-			end
-		end
-		skynet.error(string.rep("\t", tab).."}")
-	else
-		skynet.error(string.rep("\t", tab), res)
-	end
-end
+Login = {}
 
 local function register(account, password)
-    local db = mysql.connect(
-    {
-        host = "127.0.0.1",
-        port = 3306;
-        database = "skynet",
-        user = "skynet",
-        password = "123456",
-        max_packet_size = 1024 * 1024,
-        on_connect = function()
-            skynet.error("on_connect")
-        end
-    })
-    if not db then
-        skynet.error("failed to connect")
-    else
-        skynet.error("success to conncet to mysql")
-    end
-    local res = db:query("set charset utf8");
-    dump(res)
+    local db = mysql.connect()
 
     account = tonumber(account)
-    res = db:query(string.format("insert into account (id) values (%d)", account))
-    dump(res)
+    local res = db:query(string.format("insert into account (id, char_num) values (%d, 0)", account))
+    mysql.dump(res)
     if res["err"] ~= nil then
         db:disconnect()
         return 0
     else
         res = db:query(string.format("update account set password=\'%s\' where id=%d",
                     password, account))
-        dump(res)
+        mysql.dump(res)
         db:disconnect()
         return 1
     end
 end
 
-function login.register_init(cID)
+function Login.register_init(cID)
     local account, password, ret
     while true do
         account = socket.read(cID)
         if account == false then
             break
         end
-        socket.write(cID, "ok")
+        socket.write(cID, "success")
         password = socket.read(cID)
         if password == false then
             break
         end
         ret = register(account, password)
         if ret == 1 then
-            socket.write(cID, "ok")
+            socket.write(cID, "success")
             break
         else
             socket.write(cID, "default")
@@ -82,49 +44,35 @@ function login.register_init(cID)
     end
 end
 
-function login.signin(cID)
-    local db = mysql.connect(
-    {
-        host = "127.0.0.1",
-        port = 3306;
-        database = "skynet",
-        user = "skynet",
-        password = "123456",
-        max_packet_size = 1024 * 1024,
-        on_connect = function()
-            skynet.error("on_connect")
-        end
-    })
-    if not db then
-        skynet.error("failed to connect")
-    else
-        skynet.error("success to conncet to mysql")
-    end
-    local res = db:query("set charset utf8");
-    dump(res)
+function Login.signin(cID)
+    local db = mysql.connect()
 
-    local account, password, str
+    local account, password
     account = socket.read(cID)  
     if account == false then
         return
     end
-    str = "ok"
-    socket.write(cID, str)
+    socket.write(cID, "success")
     password = socket.read(cID)
     if password == false then
         return
     end
     account = tonumber(account)
-    res = db:query(string.format("select password from account where id = %d", account))
-    dump(res)
-    if res[1]["password"] == password then
-        socket.write(cID, "ok")
+    local res = db:query(string.format("select password from account where id = %d", account))
+    mysql.dump(res)
+    if res[1] == nil then
+        socket.write(cID, "default")
+        db:disconnect()
+        return
+    elseif res[1]["password"] == password then
+        socket.write(cID, "success")
+        db:disconnect()
         return
     else
         socket.write(cID, "default")
+        db:disconnect()
         return
     end
-    db:disconnect()
 end
 
-return login
+return Login

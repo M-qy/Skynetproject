@@ -2,11 +2,15 @@
 #include "login.h"
 #include "characters.h"
 
+using namespace std;
+
 pthread_cond_t pth_do = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int pth_simble = 0;
 
 string name;
+int account;
+Character* player;
 
 void* readthread(void* arg)
 {
@@ -20,6 +24,9 @@ void* readthread(void* arg)
 		while(pth_simble == 1)
 			pthread_cond_wait(&pth_do, &lock);
 
+		cout << "lock" << endl;
+			
+		memset(buf, 0, MAXLINE);
 		n = read(sockfd, buf, MAXLINE);
 		if(n == 0)
 		{
@@ -27,6 +34,11 @@ void* readthread(void* arg)
 			close(sockfd);
 			exit(0);
 		}
+		else
+		{
+			cout << "readpthread read:" << buf << endl;
+		}
+		
 		pthread_mutex_unlock(&lock);
 	}
 	return (void*)0;
@@ -52,15 +64,19 @@ int main()
 
     cout << "欢迎进入游戏！" << endl;
 
-	while(ret == 0)
+	int can_account = 0, can_character = 0;
+
+	while(can_account == 0)
 	{
-		ret = login(sockfd);	
-		if(ret == 1)
-		{/*
+		account = login(sockfd);
+		usleep(800);	
+		if(account)
+		{
+			can_account = 1;
 			while(can_character == 0)
 			{
-				name = character(sockfd);
-			}		*/	
+				name = character(sockfd, account);
+			}		
 		}		
 	}
 

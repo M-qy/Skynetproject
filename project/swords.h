@@ -3,6 +3,8 @@
 
 #include "head.h"
 
+using namespace std;
+
 class Sword
 {
     int m_attack;

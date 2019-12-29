@@ -5,6 +5,8 @@
 #include "characters.h"
 #include "swords.h"
 
+using namespace std;
+
 class Saber : Character
 {
 public:

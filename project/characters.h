@@ -3,6 +3,8 @@
 
 #include "head.h"
 
+using namespace std;
+
 class Character
 {
 public:
@@ -20,6 +22,6 @@ private:
     int m_defense;
 };
 
-string character(int socket);
+string character(int socket, int account);
 
 #endif
