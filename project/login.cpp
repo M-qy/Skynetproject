@@ -28,11 +28,7 @@ void Register(int sockfd)
         memset(buf, 0, MAXLINE);
         n = read(sockfd, buf, MAXLINE);
         if(n == 0)
-		{
-			printf("The other side has been closed\n");
-			close(sockfd);
-			exit(0);
-		}
+		    print_disconnect(sockfd);
         str = buf;
         while(str != "success");
         cout << "请输入密码：";
@@ -41,11 +37,7 @@ void Register(int sockfd)
         memset(buf, 0, MAXLINE);
         n = read(sockfd, buf, MAXLINE);
         if(n == 0)
-		{
-			printf("The other side has been closed\n");
-			close(sockfd);
-			exit(0);
-		}
+		    print_disconnect(sockfd);
         str = buf;
         if(str == "default")
         {
@@ -80,11 +72,7 @@ int Sign_in(int sockfd)
     write(sockfd, account.c_str(), account.size());
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;
     cout << "请输入密码：";
     cin >> password;
@@ -92,11 +80,7 @@ int Sign_in(int sockfd)
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;
     if(str == "default")
     {

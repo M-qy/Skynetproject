@@ -8,11 +8,14 @@ using namespace std;
 
 class Armor
 {
+public:
+    virtual void describe() = 0;
+private:
     int m_blood;
     int m_defense;
 };
 
-class Armor1 : Armor
+class Armor1 : public Armor
 {
 public:
     Armor1(Character* character)
@@ -27,8 +30,8 @@ public:
     {
         if(m_character != NULL)
         {
-            m_character = NULL;
             delete m_character;
+            m_character = NULL;   
         }
     }
     void describe()
@@ -42,7 +45,7 @@ private:
     Character* m_character;
 };
 
-class Armor2 : Armor
+class Armor2 : public Armor
 {
 public:
     Armor2(Character* character)
@@ -58,7 +61,7 @@ public:
         if(m_character != NULL)
         {
             m_character = NULL;
-            delete m_character;
+            delete m_character;              
         }
     }
     void describe()

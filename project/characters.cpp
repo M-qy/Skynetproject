@@ -1,14 +1,6 @@
 #include "characters.h"
-#include "saber.h"
 
 using namespace std;
-
-Character& character_init(string name)
-{
-    Saber* saber = new Saber(name);
-    Character* character;
-    character = saber;
-}
 
 void make_character(int sockfd)
 {
@@ -23,11 +15,7 @@ void make_character(int sockfd)
     write(sockfd, str.c_str(), str.size());
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;
     while(str != "success");
 
@@ -60,11 +48,7 @@ void make_character(int sockfd)
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;
     while(str != "success");
 
@@ -76,11 +60,7 @@ void make_character(int sockfd)
         memset(buf, 0, MAXLINE);
         n = read(sockfd, buf, MAXLINE);
         if(n == 0)
-        {
-            printf("The other side has been closed\n");
-            close(sockfd);
-            exit(0);
-        }
+            print_disconnect(sockfd);
         str = buf;
         if(str == "success")
         {
@@ -92,9 +72,9 @@ void make_character(int sockfd)
     }
 }
 
-string character(int sockfd, int account)
+character_info character(int sockfd, int account)
 {
-    string str, name;
+    string str;
     int  n = 0;
     char buf[MAXLINE];
 
@@ -106,11 +86,7 @@ string character(int sockfd, int account)
 
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;  
     while(str != "success");
 
@@ -119,11 +95,7 @@ string character(int sockfd, int account)
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
-    {
-        printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
-    }
+        print_disconnect(sockfd);
     str = buf;
     while(str != "success");
 
@@ -135,11 +107,7 @@ string character(int sockfd, int account)
         memset(buf, 0, MAXLINE);  
         n = read(sockfd, buf, MAXLINE);
         if(n == 0)
-        {
-            printf("The other side has been closed\n");
-            close(sockfd);
-            exit(0);
-        }
+            print_disconnect(sockfd);
         num = atoi(buf);
 
         if(num == 0)
@@ -152,19 +120,17 @@ string character(int sockfd, int account)
         {
             str = "character_signin";
             write(sockfd, str.c_str(), str.size());
-            vector<string> Name;
+            string name, job;
+            vector<string> Name, Job;
             int select;
+            struct character_info player;
             cout << "您拥有 " << num << " 个角色，分别是：" << endl;
             for(int i = 0; i < num; ++i)
             {
                 memset(buf, 0, MAXLINE);
                 n = read(sockfd, buf, MAXLINE);
                 if(n == 0)
-                {
-                    printf("The other side has been closed\n");
-                    close(sockfd);
-                    exit(0);
-                }
+                    print_disconnect(sockfd);
                 str = buf;
                 name = str;
                 Name.push_back(name);
@@ -175,12 +141,10 @@ string character(int sockfd, int account)
                 memset(buf, 0, MAXLINE);
                 n = read(sockfd, buf, MAXLINE);
                 if(n == 0)
-                {
-                    printf("The other side has been closed\n");
-                    close(sockfd);
-                    exit(0);
-                }
+                    print_disconnect(sockfd);
                 str = buf;
+                job = str;
+                Job.push_back(job);
                 cout << " 职业：" << str << endl;
                 str = "ok";
                 write(sockfd, str.c_str(), str.size());
@@ -194,26 +158,30 @@ string character(int sockfd, int account)
                 cout << endl;
                 cout << "\n请选择角色进入游戏：";
                 cin >> select;
+                player.name = Name[select-1];
+                player.job = Job[select-1];
                 str = "over";
                 write(sockfd, str.c_str(), str.size());
                 pth_simble = 0;
                 pthread_mutex_unlock(&lock);
-                return Name[select - 1];
+                return player;
             }
             else
             {
                 cout << "0、创建角色" << endl;
                 cout << "\n请选择角色进入游戏：";
-                cin >> select;
+                cin >> select;                
                 if(select == 0)
                     make_character(sockfd);
                 else
                 {
+                    player.name = Name[select-1];
+                    player.job = Job[select-1];
                     str = "over";
                     write(sockfd, str.c_str(), str.size());
                     pth_simble = 0;
                     pthread_mutex_unlock(&lock);
-                    return Name[select - 1];
+                    return player;
                 }
             }
         }

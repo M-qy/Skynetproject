@@ -1,6 +1,8 @@
 #include "head.h"
 #include "login.h"
 #include "characters.h"
+#include "saber.h"
+#include "player_init.h"
 
 using namespace std;
 
@@ -8,9 +10,9 @@ pthread_cond_t pth_do = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int pth_simble = 0;
 
-string name;
 int account;
-Character* player;
+struct character_info player;
+Character *cha;
 
 void* readthread(void* arg)
 {
@@ -72,10 +74,27 @@ int main()
 		usleep(800);	
 		if(account)
 		{
-			can_account = 1;
 			while(can_character == 0)
 			{
-				name = character(sockfd, account);
+				player = character(sockfd, account);
+				cout << "欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
+				if(player.job == "saber")
+				{
+					Saber saber(player.name);
+					cha = &saber;
+					ret = player_init(cha, sockfd, player.name, player.job);
+				}
+				else if(player.job == "archer")
+				{
+					Saber saber(player.name);
+					cha = &saber;
+				}
+				else if(player.job == "caster")
+				{
+					Saber saber(player.name);
+					cha = &saber;
+				}
+				exit(0);
 			}		
 		}		
 	}

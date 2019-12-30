@@ -3,6 +3,7 @@ local socket = require "skynet.socket"
 local mysql = require "skynet.db.mysql"
 local login = require "login"
 local character = require "character"
+local player_init = require "player_init"
 
 local function echo(cID, addr)
 	socket.start(cID)
@@ -26,6 +27,12 @@ local function echo(cID, addr)
 				skynet.sleep(5)
 				socket.write(cID, "success")
 				character.read(cID)
+			
+			elseif str == "player_init" then
+				socket.write(cID, "ok")
+				skynet.sleep(5)
+				socket.write(cID, "ok")
+				player_init.init(cID)
 
 			end
 
