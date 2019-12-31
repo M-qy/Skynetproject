@@ -1,8 +1,8 @@
 src = $(wildcard ./*.cpp)
-#hed = $(wildcard ./*.h)
+hed = $(wildcard ./*.h)
 notsrc = $(notdir $(src))
-#nothed = $(notdir $(hed))
-#bassrc = $(basename $(notsrc))
+nothed = $(notdir $(hed))
+bassrc = $(basename $(notsrc))
 
 act = -Wall -g -lpthread
 
@@ -10,5 +10,5 @@ act = -Wall -g -lpthread
 
 #all:$(obj)
 
-client:$(notsrc)
+client:$(notsrc) $(nothed)
 	g++ $^ -o $@ $(act)

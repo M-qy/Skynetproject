@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <vector>
 #include <map>
+#include <time.h>
 
 using namespace std;
 
@@ -24,6 +25,5 @@ void print_disconnect(int sockfd)
      printf("The other side has been closed\n");
         close(sockfd);
         exit(0);
-}
 
 #endif

@@ -38,30 +38,74 @@ int player_init(Character *cha, int sockfd, string name, string job)
     str = buf;
     while(str != "ok");
 
+    int blood, attack, defense;
+
+    memset(buf, 0, MAXLINE);
+    n = read(sockfd, buf, MAXLINE);
+    if(n == 0)
+        print_disconnect(sockfd);
+    blood = atoi(buf);
+    str = "ok";
+    write(sockfd, str.c_str(), str.size());
+
+    memset(buf, 0, MAXLINE);
+    n = read(sockfd, buf, MAXLINE);
+    if(n == 0)
+        print_disconnect(sockfd);
+    attack = atoi(buf);
+    str = "ok";
+    write(sockfd, str.c_str(), str.size());
+
+    memset(buf, 0, MAXLINE);
+    n = read(sockfd, buf, MAXLINE);
+    if(n == 0)
+        print_disconnect(sockfd);
+    defense = atoi(buf);
+    str = "ok";
+    write(sockfd, str.c_str(), str.size());
+
     Armor  *armor;
     Arm *arm;
+
+    memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
     if(str == "Sword1")
     {
-        arm = new Sword1(cha);
+        arm = new Sword1();
+        arm->init(cha);
+        cha->Puton_arm(arm);
+    }
+    else if(str == "Sword2")
+    {
+        arm = new Sword2();
+        arm->init(cha);
         cha->Puton_arm(arm);
     }
     str = "ok";
     write(sockfd, str.c_str(), str.size());
 
+    memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
     if(str == "Armor1")
     {
-        armor = new Armor1(cha);
+        armor = new Armor1();
+        armor->init(cha);
+        cha->Puton_armor(armor);
+    }
+    else if(str == "Armor2")
+    {
+        armor = new Armor2();
+        armor->init(cha);
         cha->Puton_armor(armor);
     }
     
     pth_simble = 0;
     pthread_mutex_unlock(&lock);
+    return 1;
 }

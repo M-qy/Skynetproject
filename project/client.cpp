@@ -13,6 +13,7 @@ int pth_simble = 0;
 int account;
 struct character_info player;
 Character *cha;
+Saber *saber_ptr;
 
 void* readthread(void* arg)
 {
@@ -82,7 +83,18 @@ int main()
 				{
 					Saber saber(player.name);
 					cha = &saber;
+					saber_ptr = &saber;
 					ret = player_init(cha, sockfd, player.name, player.job);
+					if(ret)
+					{
+						cout << "初始化成功！" << endl;
+						int blood = cha->Getblood();
+						int attack = cha->Getattack();
+						int defense = cha->Getdefense();
+						cout << "blood:" << blood << endl;
+						cout << "attack:" << attack << endl;
+						cout << "defense:" << defense << endl;
+					}
 				}
 				else if(player.job == "archer")
 				{

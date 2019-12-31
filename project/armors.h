@@ -18,9 +18,9 @@ private:
 class Armor1 : public Armor
 {
 public:
-    Armor1(Character* character)
+    Armor1(Character *cha)
     {
-        m_character = character;
+        m_character = cha;
         m_character->Add_blood(100);
         m_character->Add_defense(10);
 
@@ -38,19 +38,20 @@ public:
     {
         cout << "blood: " << this->m_blood << endl;
         cout << "defense: " << this->m_defense << endl;
+        cout << "被动技能：穿上增加20攻击力" << endl;
     }
 private:
     int m_blood = 100;
     int m_defense = 10;
-    Character* m_character;
+    Character *m_character;
 };
 
 class Armor2 : public Armor
 {
 public:
-    Armor2(Character* character)
+    Armor2(Character *cha)
     {
-        m_character = character;
+        m_character = cha;
         m_character->Add_blood(200);
         m_character->Add_defense(20);
         
@@ -68,11 +69,12 @@ public:
     {
         cout << "blood: " << this->m_blood << endl;
         cout << "defense: " << this->m_defense << endl;
+        cout << "被动技能：穿上增加100血量" << endl;
     }
 private:
     int m_blood = 200;
     int m_defense = 20;
-    Character* m_character;
+    Character *m_character;
 };
 
 #endif

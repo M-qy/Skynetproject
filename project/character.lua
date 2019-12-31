@@ -37,6 +37,9 @@ local function make(cID, account, num)
             res = db:query(string.format("update account set char_num = %d, character%d = \'%s\', job%d = \'%s\' where id = %d",
                     num+1, num+1, name, num+1, job, account))
             mysql.dump(res)
+            if job == "saber" then
+                res = db:query(string.format("update saber  set blood = 1000, attack = 10, defense = 10 where name = \'%s\'", name))
+            end
             socket.write(cID, "success")
             db:disconnect()
             break
