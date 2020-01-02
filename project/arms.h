@@ -1,10 +1,11 @@
-#ifndef ARMS_H
-#define ARMS_H
+#ifndef arms_h
+#define arms_h
 
-#include "head.h"
 #include "characters.h"
 
 using namespace std;
+
+class Character;
 
 class Arm
 {

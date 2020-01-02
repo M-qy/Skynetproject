@@ -5,6 +5,9 @@ local mysql = require "mysql"
 Player_init = {}
 
 function Player_init.init(cID)
+	socket.write(cID, "ok")
+	skynet.sleep(5)
+	socket.write(cID, "ok") 
     local db = mysql.connect()
     local name = socket.read(cID)
     socket.write(cID, "ok")

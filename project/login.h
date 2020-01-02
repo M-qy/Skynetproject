@@ -1,7 +1,7 @@
-#ifndef login_h_
-#define login_h_
+#ifndef login_h
+#define login_h
 
-#include "head.h"
+#include "client.h"
 
 int  login(int sockfd);
 

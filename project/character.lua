@@ -39,6 +39,9 @@ local function make(cID, account, num)
             mysql.dump(res)
             if job == "saber" then
                 res = db:query(string.format("update saber  set blood = 1000, attack = 10, defense = 10 where name = \'%s\'", name))
+				mysql.dump(res)
+				res = db:query(string.format("insert into package (name, armor1, armor2, sword1, sword2) values(\'%s\', 1, 1, 1, 1)", name)) 
+				mysql.dump(res)
             end
             socket.write(cID, "success")
             db:disconnect()
@@ -76,6 +79,9 @@ end
 
 function Character.read(cID)
     local str, num, account
+	socket.write(cID, "ok")
+	skynet.sleep(5)
+	socket.write(cID, "success") 
     account = socket.read(cID)
     if account == false then
         return

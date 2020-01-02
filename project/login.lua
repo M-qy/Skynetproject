@@ -24,6 +24,7 @@ end
 
 function Login.register_init(cID)
     local account, password, ret
+    socket.write(cID, "ok")
     while true do
         account = socket.read(cID)
         if account == false then
@@ -45,6 +46,7 @@ function Login.register_init(cID)
 end
 
 function Login.signin(cID)
+    socket.write(cID, "ok")
     local db = mysql.connect()
 
     local account, password

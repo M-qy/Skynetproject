@@ -1,5 +1,5 @@
-#ifndef _head_h
-#define _head_h
+#ifndef client_h
+#define client_h
 
 #include <iostream>
 #include <pthread.h>
@@ -20,10 +20,6 @@ extern pthread_cond_t pth_do;
 extern pthread_mutex_t lock;
 extern int pth_simble;
 
-void print_disconnect(int sockfd)
-{
-     printf("The other side has been closed\n");
-        close(sockfd);
-        exit(0);
+void print_disconnect(int sockfd);
 
 #endif

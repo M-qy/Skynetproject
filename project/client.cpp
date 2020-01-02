@@ -1,19 +1,27 @@
-#include "head.h"
-#include "login.h"
-#include "characters.h"
 #include "saber.h"
+#include "login.h"
 #include "player_init.h"
+#include "package.h"
 
 using namespace std;
 
 pthread_cond_t pth_do = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int pth_simble = 0;
+int simble = 0;
 
 int account;
 struct character_info player;
 Character *cha;
 Saber *saber_ptr;
+map<string, int> package;
+
+void print_disconnect(int sockfd)
+{
+	printf("The other side has been closed\n");
+	close(sockfd);
+	exit(0);
+}
 
 void* readthread(void* arg)
 {
@@ -28,6 +36,7 @@ void* readthread(void* arg)
 			pthread_cond_wait(&pth_do, &lock);
 
 		cout << "lock" << endl;
+		simble = 1;
 			
 		memset(buf, 0, MAXLINE);
 		n = read(sockfd, buf, MAXLINE);
@@ -43,6 +52,7 @@ void* readthread(void* arg)
 		}
 		
 		pthread_mutex_unlock(&lock);
+		simble = 0;
 	}
 	return (void*)0;
 }
@@ -72,13 +82,14 @@ int main()
 	while(can_account == 0)
 	{
 		account = login(sockfd);
-		usleep(800);	
+		while(simble == 0);
 		if(account)
 		{
 			while(can_character == 0)
 			{
 				player = character(sockfd, account);
 				cout << "欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
+				while(simble == 0);
 				if(player.job == "saber")
 				{
 					Saber saber(player.name);
@@ -87,13 +98,19 @@ int main()
 					ret = player_init(cha, sockfd, player.name, player.job);
 					if(ret)
 					{
-						cout << "初始化成功！" << endl;
+						cout << "角色初始化成功！" << endl;
 						int blood = cha->Getblood();
 						int attack = cha->Getattack();
 						int defense = cha->Getdefense();
 						cout << "blood:" << blood << endl;
 						cout << "attack:" << attack << endl;
 						cout << "defense:" << defense << endl;
+					}
+					package = package_init(sockfd, player.name);
+					cout << "背包初始化成功！" << endl;
+					for(auto it = package.begin(); it != package.end(); ++it)
+					{
+						cout << it->first << ": " << it->second << endl;
 					}
 				}
 				else if(player.job == "archer")

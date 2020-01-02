@@ -1,7 +1,4 @@
 #include "player_init.h"
-#include "arms.h"
-#include "armors.h"
-#include "swords.h"
 
 using namespace std;
 
@@ -64,6 +61,8 @@ int player_init(Character *cha, int sockfd, string name, string job)
     str = "ok";
     write(sockfd, str.c_str(), str.size());
 
+    cha->init(blood, attack, defense);
+
     Armor  *armor;
     Arm *arm;
 
@@ -72,18 +71,39 @@ int player_init(Character *cha, int sockfd, string name, string job)
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
-    if(str == "Sword1")
-    {
-        arm = new Sword1();
-        arm->init(cha);
-        cha->Puton_arm(arm);
-    }
-    else if(str == "Sword2")
-    {
-        arm = new Sword2();
-        arm->init(cha);
-        cha->Puton_arm(arm);
-    }
+	if(job == "saber")
+	{
+		if(str == "Sword1")
+		{
+			arm = new Sword1();
+			arm->init(cha);
+			cha->Puton_arm(arm);
+		}
+		else if(str == "Sword2")
+		{
+			arm = new Sword2();
+			arm->init(cha);
+			cha->Puton_arm(arm);
+		}
+	}
+	else if(job == "archer")
+	{
+		if(str == "Sword1")
+		{
+		}
+		else if(str == "Sword2")
+		{
+		} 
+	}
+	else if(job == "caster")
+	{
+		if(str == "Sword1")
+		{
+		}
+		else if(str == "Sword2")
+		{
+		} 
+	} 
     str = "ok";
     write(sockfd, str.c_str(), str.size());
 
@@ -107,5 +127,6 @@ int player_init(Character *cha, int sockfd, string name, string job)
     
     pth_simble = 0;
     pthread_mutex_unlock(&lock);
+	pthread_cond_signal(&pth_do);
     return 1;
 }

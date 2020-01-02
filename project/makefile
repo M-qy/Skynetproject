@@ -10,5 +10,5 @@ act = -Wall -g -lpthread
 
 #all:$(obj)
 
-client:$(notsrc) $(nothed)
+client:$(notsrc)
 	g++ $^ -o $@ $(act)

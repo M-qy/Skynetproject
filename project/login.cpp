@@ -53,6 +53,7 @@ void Register(int sockfd)
 
     pth_simble = 0;
     pthread_mutex_unlock(&lock);
+	pthread_cond_signal(&pth_do);
 }
 
 int Sign_in(int sockfd)
@@ -94,6 +95,7 @@ int Sign_in(int sockfd)
         cout << "登录成功！" << endl;
         pth_simble = 0;
         pthread_mutex_unlock(&lock);
+		pthread_cond_signal(&pth_do);
         int ret = atoi(account.c_str());
         return ret;
     }             
@@ -103,19 +105,21 @@ int login(int sockfd)
 {
     int select, ret;
 
-    cout << "\n1、登录游戏 2、注册账号" << endl;
-    cin >> select;
-    switch(select)
-    {
-    case 1:
-        ret = Sign_in(sockfd);
-        return ret;
-    case 2:
-        Register(sockfd);
-        return 0;
-    default:
-        cout << "您的输入有误！" << endl;
-        break;
-    }
-    return 0;
+	while(1)
+	{
+		cout << "\n1、登录游戏 2、注册账号" << endl;
+		cin >> select;
+		switch(select)
+		{
+		case 1:
+			ret = Sign_in(sockfd);
+			return ret;
+		case 2:
+			Register(sockfd);
+			break;
+		default:
+			cout << "您的输入有误！" << endl;
+			break;
+		}
+	}
 }

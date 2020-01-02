@@ -4,6 +4,7 @@ local mysql = require "skynet.db.mysql"
 local login = require "login"
 local character = require "character"
 local player_init = require "player_init"
+local package = require "package"
 
 local function echo(cID, addr)
 	socket.start(cID)
@@ -14,26 +15,27 @@ local function echo(cID, addr)
 		if str then
             skynet.error("recv "..addr.." "..str)
 
-            if str == "register" then
-                socket.write(cID, "ok")
-                login.register_init(cID)
-
-            elseif str == "signin" then
-                socket.write(cID, "ok")
-				login.signin(cID)
-				
-			elseif str == "character" then
-				socket.write(cID, "ok")
-				skynet.sleep(5)
-				socket.write(cID, "success")
-				character.read(cID)
-			
-			elseif str == "player_init" then
-				socket.write(cID, "ok")
-				skynet.sleep(5)
-				socket.write(cID, "ok")
-				player_init.init(cID)
-
+			local selection = 
+			{
+				["register"] = function()
+					login.register_init(cID)
+				end,
+				["signin"] = function()
+					login.signin(cID)
+				end,
+				["character"] = function()
+					character.read(cID)
+				end,
+				["player_init"] = function()
+					player_init.init(cID)
+				end,
+				["package"] = function()
+					package.init(cID)
+				end,
+			}
+			local switch = selection[str]
+			if switch then
+				local res = switch()
 			end
 
 		else
