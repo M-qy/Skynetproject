@@ -17,6 +17,8 @@ void Armor1::describe()
 	cout << "被动技能：穿上增加20攻击力" << endl;
 }
 
+char* Armor1::get_name(){return this->m_name;}
+
 void Armor2::init(Character *cha)
 {
 	cha->Add_blood(200);
@@ -32,3 +34,4 @@ void Armor2::describe()
 	cout << "被动技能：穿上增加100血量" << endl;
 }
 
+char* Armor2::get_name(){return this->m_name;}

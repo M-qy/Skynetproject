@@ -4,7 +4,7 @@ notsrc = $(notdir $(src))
 nothed = $(notdir $(hed))
 bassrc = $(basename $(notsrc))
 
-act = -Wall -g -lpthread
+act = -Wall -g -lpthread -std=c++11
 
 #obj = $(patsubst %.cpp, $(bassrc), $(notsrc))
 

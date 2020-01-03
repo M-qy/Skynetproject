@@ -12,8 +12,7 @@ class Arm
 public:
     virtual void init(Character *cha) = 0;
     virtual void describe() = 0;
-private:
-    int attack;
+	virtual char* get_name() = 0;
 };
 
 #endif

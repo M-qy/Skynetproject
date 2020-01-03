@@ -63,8 +63,9 @@ int player_init(Character *cha, int sockfd, string name, string job)
 
     cha->init(blood, attack, defense);
 
-    Armor  *armor;
+    Armor *armor;
     Arm *arm;
+	cout << "aaaaaaaaaaaaaaaaa" << endl;
 
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);

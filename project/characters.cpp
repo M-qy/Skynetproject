@@ -15,6 +15,20 @@ void Character::Lock_opponent(Character *opponent){this->m_opponent = opponent;}
 int Character::Getblood(){return this->m_blood;}
 int Character::Getattack(){return this->m_attack;}
 int Character::Getdefense(){return this->m_defense;}
+void Character::Getarmname()
+{
+	if(this->m_arm == NULL)
+		cout << "您没有穿戴任何武器！" << endl;
+	else
+		cout << "您穿戴了 " << this->m_arm->get_name() << endl;
+}
+void Character::Getarmorname()
+{
+	if(this->m_armor == NULL)
+		cout << "您没有穿戴任何防具！" << endl;
+	else
+		cout << "您穿戴了 " << this->m_armor->get_name() << endl;
+}
 void Character::init(int blood, int attack, int defense)
 {
 	this->m_blood = blood;

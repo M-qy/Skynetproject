@@ -14,6 +14,7 @@ function Player_init.init(cID)
     local job = socket.read(cID)
     socket.write(cID, "ok")
     local res = db:query(string.format("select * from %s where name = \'%s\'", job, name))
+	mysql.dump(res)
     
     socket.write(cID, res[1]["blood"])
     local str = socket.read(cID)

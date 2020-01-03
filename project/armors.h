@@ -12,9 +12,7 @@ class Armor
 	public:
 		virtual void describe() = 0;
 		virtual void init(Character *cha) = 0;
-	private:
-		int m_blood;
-		int m_defense;
+		virtual char* get_name() = 0;
 };
 
 class Armor1 : public Armor
@@ -22,9 +20,11 @@ class Armor1 : public Armor
 	public:
 		void init(Character *cha);
 		void describe();
+		char* get_name();
 	private:
-		int m_blood = 100;
-		int m_defense = 10;
+		const int m_blood = 100;
+		const int m_defense = 10;
+		char* m_name = (char*)"Armor1";
 };
 
 class Armor2 : public Armor
@@ -32,9 +32,11 @@ class Armor2 : public Armor
 	public:
 		void init(Character *cha);
 		void describe();
+		char* get_name();
 	private:
-		int m_blood = 200;
-		int m_defense = 20;
+		const int m_blood = 200;
+		const int m_defense = 20;
+		char* m_name = (char*)"Armor2";
 };
 
 #endif

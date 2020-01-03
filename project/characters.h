@@ -26,6 +26,8 @@ public:
     virtual int Getblood();
     virtual int Getattack();
     virtual int Getdefense();
+	virtual void Getarmname();
+	virtual void Getarmorname();
     virtual void init(int blood, int attack, int defense);
     virtual void Ace();
     virtual void Bleeding();    //每回合访问此成员函数判断自己是否有中流血

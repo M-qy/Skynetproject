@@ -2,6 +2,7 @@
 #include "login.h"
 #include "player_init.h"
 #include "package.h"
+#include "equipments.h"
 
 using namespace std;
 
@@ -79,14 +80,16 @@ int main()
 
 	int can_account = 0, can_character = 0;
 
-	while(can_account == 0)
+	while(1)
 	{
+		can_account = 0;
 		account = login(sockfd);
 		while(simble == 0);
 		if(account)
 		{
-			while(can_character == 0)
+			while(can_account == 0)
 			{
+				can_character = 0;
 				player = character(sockfd, account);
 				cout << "欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
 				while(simble == 0);
@@ -95,23 +98,7 @@ int main()
 					Saber saber(player.name);
 					cha = &saber;
 					saber_ptr = &saber;
-					ret = player_init(cha, sockfd, player.name, player.job);
-					if(ret)
-					{
-						cout << "角色初始化成功！" << endl;
-						int blood = cha->Getblood();
-						int attack = cha->Getattack();
-						int defense = cha->Getdefense();
-						cout << "blood:" << blood << endl;
-						cout << "attack:" << attack << endl;
-						cout << "defense:" << defense << endl;
-					}
-					package = package_init(sockfd, player.name);
-					cout << "背包初始化成功！" << endl;
-					for(auto it = package.begin(); it != package.end(); ++it)
-					{
-						cout << it->first << ": " << it->second << endl;
-					}
+					
 				}
 				else if(player.job == "archer")
 				{
@@ -123,7 +110,49 @@ int main()
 					Saber saber(player.name);
 					cha = &saber;
 				}
-				exit(0);
+
+				ret = player_init(cha, sockfd, player.name, player.job);
+				if(ret)
+					cout << "角色初始化成功！" << endl;
+				while(simble == 0);
+				ret = 0;
+				ret = package_init(sockfd, player.name, package);
+				if(ret)
+					cout << "背包初始化成功！" << endl;
+				for(auto it = package.begin(); it != package.end(); ++it)
+				{
+					cout << it->first << ": " << it->second << endl;
+				} 
+
+				while(can_character == 0)
+				{
+					cout << "\n1、查看属性 2、查看装备 3、匹配战斗 4、注销角色 5、注销账号";
+					cout << "请输入您的选择：";
+					int select;
+					cin >> select;
+					switch(select)
+					{
+						case 1:
+							cout << "\nblood: " << cha->Getblood() << endl;
+							cout << "attack: " << cha->Getattack() << endl;
+							cout << "defense: " << cha->Getdefense() << endl;
+							break;
+						case 2:
+							equipments(sockfd, cha, package);
+							break;
+						case 3:
+							break;
+						case 4:
+							can_character = 1;
+							break; 
+						case 5:
+							can_character = 1;
+							can_account = 1;
+							break;
+						default:
+							cout << "您的输入有误，请重新输入！" << endl;
+					}
+				}
 			}		
 		}		
 	}

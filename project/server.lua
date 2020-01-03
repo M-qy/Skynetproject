@@ -4,7 +4,7 @@ local mysql = require "skynet.db.mysql"
 local login = require "login"
 local character = require "character"
 local player_init = require "player_init"
-local package = require "package"
+local package = require "package_init"
 
 local function echo(cID, addr)
 	socket.start(cID)

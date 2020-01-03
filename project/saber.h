@@ -25,6 +25,8 @@ public:
     int Getblood();
     int Getattack();
     int Getdefense();
+	void Getarmname();
+	void Getarmorname();
     void init(int blood, int attack, int defense);
     void Ace();
     void Bleeding();    //每回合访问此成员函数判断自己是否有中流血

@@ -19,6 +19,20 @@ void Saber::Lock_opponent(Character *opponent){this->m_opponent = opponent;}
 int Saber::Getblood(){return this->m_blood;}
 int Saber::Getattack(){return this->m_attack;}
 int Saber::Getdefense(){return this->m_defense;}
+void Saber::Getarmname()
+{
+	if(this->m_arm == NULL)
+		cout << "您没有穿戴任何武器！" << endl;
+	else
+		cout << "您穿戴了 " << this->m_arm->get_name() << endl;
+}
+void Saber::Getarmorname()
+{
+	if(this->m_armor == NULL)
+		cout << "您没有穿戴任何防具！" << endl;
+	else
+		cout << "您穿戴了 " << this->m_armor->get_name() << endl;
+}
 void Saber::init(int blood, int attack, int defense)
 {
     this->m_blood = blood;

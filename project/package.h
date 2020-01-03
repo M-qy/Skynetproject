@@ -4,6 +4,6 @@
 #include "swords.h"
 #include "armors.h"
 
-map<string, int>& package_init(int sockfd, string name);
+int package_init(int sockfd, string name, map<string, int>&package);
 
 #endif
