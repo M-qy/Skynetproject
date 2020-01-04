@@ -53,12 +53,13 @@ local function make(cID, account, num)
 end
 
 local function signin(cID, account, num)
+	local name, job
     account = tonumber(account)
     local db = mysql.connect()
     local res = db:query(string.format("select * from account where id = %d", account))
     mysql.dump(res)
     for var = 1, num do
-        local name = res[1][string.format("character%d", var)]
+        name = res[1][string.format("character%d", var)]
         socket.write(cID, name)
         local str = socket.read(cID)
         if str == false then
@@ -66,7 +67,7 @@ local function signin(cID, account, num)
         end
         while str ~= "ok" do
         end
-        local job = res[1][string.format("job%d", var)]
+        job = res[1][string.format("job%d", var)]
         socket.write(cID, job)
         str = socket.read(cID)
         if str == false then
@@ -78,7 +79,7 @@ local function signin(cID, account, num)
 end
 
 function Character.read(cID)
-    local str, num, account
+    local str, num, account, name, job
 	socket.write(cID, "ok")
 	skynet.sleep(5)
 	socket.write(cID, "success") 

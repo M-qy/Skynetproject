@@ -45,6 +45,7 @@ function Player_init.init(cID)
     else
         socket.write(cID, res[1]["armor"])
     end
+	return name, job
 end
 
 return Player_init

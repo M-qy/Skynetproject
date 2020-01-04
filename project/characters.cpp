@@ -1,7 +1,7 @@
 #include "characters.h"
 
 using namespace std;
-
+/*
 void Character::Add_blood(int n){this->m_blood += n;}  
 void Character::Add_attack(int n){this->m_attack += n;}   
 void Character::Add_defense(int n){this->m_defense += n;}
@@ -9,8 +9,8 @@ void Character::Sub_blood(int n){this->m_blood -= (n - this->m_defense);}
 void Character::Sub_attack(int n){this->m_attack -= n;}
 void Character::Sub_defense(int n){this->m_defense -= n;}   
 void Character::Rename(string name){this->m_name = name;}
-void Character::Puton_arm(Arm *arm){this->m_arm = arm;}
-void Character::Puton_armor(Armor *armor){this->m_armor = armor;}
+void Character::Puton_arm(Things *arm){this->m_arm = arm;}
+void Character::Puton_armor(Things *armor){this->m_armor = armor;}
 void Character::Lock_opponent(Character *opponent){this->m_opponent = opponent;}
 int Character::Getblood(){return this->m_blood;}
 int Character::Getattack(){return this->m_attack;}
@@ -28,7 +28,7 @@ void Character::Getarmorname()
 		cout << "您没有穿戴任何防具！" << endl;
 	else
 		cout << "您穿戴了 " << this->m_armor->get_name() << endl;
-}
+}*/
 void Character::init(int blood, int attack, int defense)
 {
 	this->m_blood = blood;
@@ -185,7 +185,7 @@ character_info character(int sockfd, int account)
 
 		if(num == 0)
 		{
-			cout << "您还没创建过角色！下面进行角色创建！" << endl;
+			cout << "\n您还没创建过角色！下面进行角色创建！" << endl;
 			make_character(sockfd);
 		}
 
@@ -197,7 +197,7 @@ character_info character(int sockfd, int account)
 			vector<string> Name, Job;
 			int select;
 			struct character_info player;
-			cout << "您拥有 " << num << " 个角色，分别是：" << endl;
+			cout << "\n您拥有 " << num << " 个角色，分别是：" << endl;
 			for(int i = 0; i < num; ++i)
 			{
 				memset(buf, 0, MAXLINE);

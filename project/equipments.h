@@ -3,6 +3,6 @@
 
 #include "characters.h"
 
-void equipments(int sockfd, Character *cha, map<string, int>&package);
+void equipments(int sockfd, Character *cha, vector<Things_str*>&package);
 
 #endif

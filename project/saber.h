@@ -5,8 +5,7 @@
 
 using namespace std;
 
-class Arm;
-class Armor;
+class Character;
 
 class Saber : public Character
 {
@@ -14,19 +13,22 @@ public:
     Saber(string name);
     void Add_blood(int n);
     void Sub_blood(int n);
+	void Sub_equiblood(int n);
     void Add_attack(int n);
     void Sub_attack(int n);
     void Add_defense(int n);
     void Sub_defense(int n);
     void Rename(string name);
-    void Puton_arm(Arm *arm);
-    void Puton_armor(Armor *armor);
+    void Puton_arm(Things *arm);
+	void Takeoff_arm();
+    void Puton_armor(Things *armor);
+	void Takeoff_armor();
     void Lock_opponent(Character *opponent);
     int Getblood();
     int Getattack();
     int Getdefense();
-	void Getarmname();
-	void Getarmorname();
+	char* Getarmname();
+	char* Getarmorname();
     void init(int blood, int attack, int defense);
     void Ace();
     void Bleeding();    //每回合访问此成员函数判断自己是否有中流血
@@ -35,9 +37,9 @@ public:
     void Unbleed();    //武器不带有流血被动技能
 private:
     string m_name;
-    int m_blood = 1000;
-    int m_attack = 10;
-    int m_defense = 10;
+    int m_blood;
+    int m_attack;
+    int m_defense;
     int bleed_sign = 0;    //触发使对方流血的标记
     int o_bleed_sign =0;    //判断自己是否中流血的标记
     int bleed_num;    //自己中流血后剩下的次数
@@ -45,8 +47,8 @@ private:
     int bleed_blood;    //自己中流血后每次流血的血量
     int o_bleed_blood;    //传给对方每次流血的血量
     int bleed_probability;
-    Arm *m_arm;
-    Armor *m_armor;
+    Things *m_arm;
+    Things *m_armor;
     Character *m_opponent;
 };
 

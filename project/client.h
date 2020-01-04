@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <vector>
 #include <map>
+#include <string>
 #include <time.h>
 
 using namespace std;

@@ -7,36 +7,30 @@ using namespace std;
 
 class Character;
 
-class Armor
-{
-	public:
-		virtual void describe() = 0;
-		virtual void init(Character *cha) = 0;
-		virtual char* get_name() = 0;
-};
-
-class Armor1 : public Armor
+class Armor1 : public Things
 {
 	public:
 		void init(Character *cha);
 		void describe();
 		char* get_name();
+		void takeoff(Character *cha);
 	private:
 		const int m_blood = 100;
 		const int m_defense = 10;
-		char* m_name = (char*)"Armor1";
+		const int ex_attack = 20;
 };
 
-class Armor2 : public Armor
+class Armor2 : public Things
 {
 	public:
 		void init(Character *cha);
 		void describe();
 		char* get_name();
+		void takeoff(Character *cha);
 	private:
 		const int m_blood = 200;
 		const int m_defense = 20;
-		char* m_name = (char*)"Armor2";
+		const int ex_blood = 100;
 };
 
 #endif

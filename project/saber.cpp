@@ -3,35 +3,38 @@
 using namespace std;
 
 Saber::Saber(string name)
-    {
-        this->m_name = name;
-    }
+{
+    this->m_name = name;
+}
 void Saber::Add_blood(int n){this->m_blood += n;}
 void Saber::Sub_blood(int n){this->m_blood -= (n - this->m_defense);}
+void Saber::Sub_equiblood(int n){this->m_blood -= n;}
 void Saber::Add_attack(int n){this->m_attack += n;}
 void Saber::Sub_attack(int n){this->m_attack -= n;}
 void Saber::Add_defense(int n){this->m_defense += n;}
 void Saber::Sub_defense(int n){this->m_defense -= n;}
 void Saber::Rename(string name){this->m_name = name;}
-void Saber::Puton_arm(Arm *arm){this->m_arm = arm;}
-void Saber::Puton_armor(Armor *armor){this->m_armor = armor;}
+void Saber::Puton_arm(Things *arm){this->m_arm = arm;}
+void Saber::Takeoff_arm(){this->m_arm = NULL;}
+void Saber::Puton_armor(Things *armor){this->m_armor = armor;}
+void Saber::Takeoff_armor(){this->m_armor = NULL;}
 void Saber::Lock_opponent(Character *opponent){this->m_opponent = opponent;}
 int Saber::Getblood(){return this->m_blood;}
 int Saber::Getattack(){return this->m_attack;}
 int Saber::Getdefense(){return this->m_defense;}
-void Saber::Getarmname()
+char* Saber::Getarmname()
 {
 	if(this->m_arm == NULL)
-		cout << "您没有穿戴任何武器！" << endl;
+		return (char*)"NULL";
 	else
-		cout << "您穿戴了 " << this->m_arm->get_name() << endl;
+		return this->m_arm->get_name();
 }
-void Saber::Getarmorname()
+char* Saber::Getarmorname()
 {
 	if(this->m_armor == NULL)
-		cout << "您没有穿戴任何防具！" << endl;
+		return (char*)"NULL";
 	else
-		cout << "您穿戴了 " << this->m_armor->get_name() << endl;
+		return this->m_armor->get_name();
 }
 void Saber::init(int blood, int attack, int defense)
 {

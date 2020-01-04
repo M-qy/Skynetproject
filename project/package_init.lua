@@ -8,7 +8,6 @@ function Package.init(cID)
 	socket.write(cID, "ok")
 	skynet.sleep(5)
 	socket.write(cID, "ok")
-	skynet.error("send ok over")
 	local str = socket.read(cID)
 	if str == false then
 		return

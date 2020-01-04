@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int player_init(Character *cha, int sockfd, string name, string job)
+int player_init(Character *cha, int sockfd, string name, string job, vector<Things_str*>&package)
 {
     string str;
     int n = 0;
@@ -63,49 +63,15 @@ int player_init(Character *cha, int sockfd, string name, string job)
 
     cha->init(blood, attack, defense);
 
-    Armor *armor;
-    Arm *arm;
-	cout << "aaaaaaaaaaaaaaaaa" << endl;
-
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
-	if(job == "saber")
-	{
-		if(str == "Sword1")
-		{
-			arm = new Sword1();
-			arm->init(cha);
-			cha->Puton_arm(arm);
-		}
-		else if(str == "Sword2")
-		{
-			arm = new Sword2();
-			arm->init(cha);
-			cha->Puton_arm(arm);
-		}
-	}
-	else if(job == "archer")
-	{
-		if(str == "Sword1")
-		{
-		}
-		else if(str == "Sword2")
-		{
-		} 
-	}
-	else if(job == "caster")
-	{
-		if(str == "Sword1")
-		{
-		}
-		else if(str == "Sword2")
-		{
-		} 
-	} 
-    str = "ok";
+	int ret = package_find(package, str);
+	if(ret != -1)
+		cha->Puton_arm(package[ret]->things);
+	str = "ok";
     write(sockfd, str.c_str(), str.size());
 
     memset(buf, 0, MAXLINE);
@@ -113,18 +79,9 @@ int player_init(Character *cha, int sockfd, string name, string job)
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
-    if(str == "Armor1")
-    {
-        armor = new Armor1();
-        armor->init(cha);
-        cha->Puton_armor(armor);
-    }
-    else if(str == "Armor2")
-    {
-        armor = new Armor2();
-        armor->init(cha);
-        cha->Puton_armor(armor);
-    }
+	ret = package_find(package, str); 
+	if(ret != -1)
+		cha->Puton_armor(package[ret]->things);
     
     pth_simble = 0;
     pthread_mutex_unlock(&lock);

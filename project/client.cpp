@@ -15,7 +15,7 @@ int account;
 struct character_info player;
 Character *cha;
 Saber *saber_ptr;
-map<string, int> package;
+vector<Things_str*> package;
 
 void print_disconnect(int sockfd)
 {
@@ -36,7 +36,6 @@ void* readthread(void* arg)
 		while(pth_simble == 1)
 			pthread_cond_wait(&pth_do, &lock);
 
-		cout << "lock" << endl;
 		simble = 1;
 			
 		memset(buf, 0, MAXLINE);
@@ -91,14 +90,11 @@ int main()
 			{
 				can_character = 0;
 				player = character(sockfd, account);
-				cout << "欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
+				cout << "\n欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
 				while(simble == 0);
 				if(player.job == "saber")
 				{
-					Saber saber(player.name);
-					cha = &saber;
-					saber_ptr = &saber;
-					
+					cha = new Saber(player.name);
 				}
 				else if(player.job == "archer")
 				{
@@ -111,22 +107,19 @@ int main()
 					cha = &saber;
 				}
 
-				ret = player_init(cha, sockfd, player.name, player.job);
-				if(ret)
-					cout << "角色初始化成功！" << endl;
 				while(simble == 0);
-				ret = 0;
 				ret = package_init(sockfd, player.name, package);
 				if(ret)
 					cout << "背包初始化成功！" << endl;
-				for(auto it = package.begin(); it != package.end(); ++it)
-				{
-					cout << it->first << ": " << it->second << endl;
-				} 
+				while(simble == 0);
+				ret = 0;
+				ret = player_init(cha, sockfd, player.name, player.job, package);
+				if(ret)
+					cout << "角色初始化成功！" << endl;
 
 				while(can_character == 0)
 				{
-					cout << "\n1、查看属性 2、查看装备 3、匹配战斗 4、注销角色 5、注销账号";
+					cout << "\n1、查看属性 2、查看装备 3、匹配战斗 4、注销角色 5、注销账号" << endl;
 					cout << "请输入您的选择：";
 					int select;
 					cin >> select;

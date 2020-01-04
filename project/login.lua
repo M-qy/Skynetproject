@@ -69,7 +69,7 @@ function Login.signin(cID)
     elseif res[1]["password"] == password then
         socket.write(cID, "success")
         db:disconnect()
-        return
+        return account
     else
         socket.write(cID, "default")
         db:disconnect()

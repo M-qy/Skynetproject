@@ -8,6 +8,8 @@ local package = require "package_init"
 
 local function echo(cID, addr)
 	socket.start(cID)
+	
+	local account, name, job
 
 	while true do
         local str = socket.read(cID)
@@ -21,13 +23,13 @@ local function echo(cID, addr)
 					login.register_init(cID)
 				end,
 				["signin"] = function()
-					login.signin(cID)
+					account = login.signin(cID)
 				end,
 				["character"] = function()
 					character.read(cID)
 				end,
 				["player_init"] = function()
-					player_init.init(cID)
+					name, job = player_init.init(cID)
 				end,
 				["package"] = function()
 					package.init(cID)
