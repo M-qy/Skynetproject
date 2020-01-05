@@ -36,9 +36,9 @@ void* readthread(void* arg)
 		while(pth_simble == 1)
 			pthread_cond_wait(&pth_do, &lock);
 
-		simble = 1;
-			
 		memset(buf, 0, MAXLINE);
+		cout << "lock" << endl;
+		simble = 1;
 		n = read(sockfd, buf, MAXLINE);
 		if(n == 0)
 		{
@@ -83,15 +83,14 @@ int main()
 	{
 		can_account = 0;
 		account = login(sockfd);
-		while(simble == 0);
 		if(account)
 		{
 			while(can_account == 0)
 			{
 				can_character = 0;
+				while(simble == 0);
 				player = character(sockfd, account);
 				cout << "\n欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
-				while(simble == 0);
 				if(player.job == "saber")
 				{
 					cha = new Saber(player.name);
@@ -107,18 +106,20 @@ int main()
 					cha = &saber;
 				}
 
+				usleep(10);
 				while(simble == 0);
 				ret = package_init(sockfd, player.name, package);
 				if(ret)
 					cout << "背包初始化成功！" << endl;
-				while(simble == 0);
 				ret = 0;
+				while(simble == 0);
 				ret = player_init(cha, sockfd, player.name, player.job, package);
 				if(ret)
 					cout << "角色初始化成功！" << endl;
 
 				while(can_character == 0)
 				{
+					while(simble == 0);
 					cout << "\n1、查看属性 2、查看装备 3、匹配战斗 4、注销角色 5、注销账号" << endl;
 					cout << "请输入您的选择：";
 					int select;

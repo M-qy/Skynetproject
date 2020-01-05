@@ -6,7 +6,7 @@ Package = {}
 
 function Package.init(cID)
 	socket.write(cID, "ok")
-	skynet.sleep(5)
+	skynet.sleep(10)
 	socket.write(cID, "ok")
 	local str = socket.read(cID)
 	if str == false then

@@ -5,6 +5,7 @@ local login = require "login"
 local character = require "character"
 local player_init = require "player_init"
 local package = require "package_init"
+local equipment = require "equipments"
 
 local function echo(cID, addr)
 	socket.start(cID)
@@ -33,6 +34,9 @@ local function echo(cID, addr)
 				end,
 				["package"] = function()
 					package.init(cID)
+				end,
+				["equipment"] = function()
+					equipment.start(cID, name, job)
 				end,
 			}
 			local switch = selection[str]

@@ -12,7 +12,7 @@ void Sword1::describe()
     cout << "attack: " << this->m_attack << endl;
 }
 char* Sword1::get_name(){return (char*)"sword1";}
-void Sword2::takeoff(Character *cha){cha->Sub_attack(this->m_attack);}
+void Sword1::takeoff(Character *cha){cha->Sub_attack(this->m_attack);}
 
 void Sword2::init(Character* cha)
 {

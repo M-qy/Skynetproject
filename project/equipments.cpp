@@ -2,8 +2,8 @@
 
 using namespace std;
 
-int puton(int sockfd, vector<Things_str*>&package, int select);
-int takeoff(int sockfd, vector<Things_str*>&package, int select);
+void puton(int sockfd, Character *cha, string selection, Things *things);
+void takeoff(int sockfd, Character *cha, string selection, Things *things);
 
 void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 {
@@ -13,9 +13,9 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 	{
 		string arm = cha->Getarmname();
 		if(arm == "NULL")
-			cout << "您没有穿戴武器！" << endl;
+			cout << "\n您没有穿戴武器！" << endl;
 		else
-			cout << "您穿戴着" << arm << endl;
+			cout << "\n您穿戴着" << arm << endl;
 		string armor = cha->Getarmorname();
 		if(arm == "NULL")
 			cout << "您没有穿戴防具！" << endl;
@@ -54,7 +54,7 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 						package[select1-1]->things->describe();
 						break;
 					case 2:
-						int ret = takeoff(sockfd, selection, select1);
+						takeoff(sockfd, cha, selection, package[select1-1]->things);
 						point = 0;
 						break;
 					default:
@@ -63,47 +63,186 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 				}
 			}
 		}
+		else
+		{
+			while(point == 1)
+			{
+				int select2;
+				cout << "\n1、查看属性 2、穿戴 0、返回背包" << endl;
+				cout << "请输入您的选择：";
+				cin >> select2;
+				switch(select2)
+				{
+					case 0:
+						point = 0;
+						break;
+					case 1:
+						package[select1-1]->things->describe();
+						break;
+					case 2:
+						puton(sockfd, cha, selection, package[select1-1]->things);
+						point = 0;
+						break;
+					default:
+						cout << "您的输入有误！" << endl;
+						break;
+				}
+			} 
+		}
 	}
 }
 
-int puton(int sockfd, vector<Things_str*>&package, int select)
+void puton(int sockfd, Character *cha, string selection, Things *things)
 {
 	string str;
 	int n = 0;
 	char buf[MAXLINE];
 
 	pth_simble = 1;
-	str = "puton";
+	str = "equipment";
 	write(sockfd, str.c_str(), str.size());
 	pthread_mutex_lock(&lock); 
+
+	memset(buf, 0, MAXLINE);
+	n = read(sockfd, buf, MAXLINE);
+	if(n == 0)
+		print_disconnect(sockfd);
+	str = buf;
+	while(str != "ok");
+
+	str = "puton";
+	write(sockfd, str.c_str(), str.size()); 
+	memset(buf, 0, MAXLINE);
+	n = read(sockfd, buf, MAXLINE);
+	if(n == 0)
+		print_disconnect(sockfd);
+	str = buf;
+	while(str != "ok"); 
+
+	string::size_type pos = selection.find("armor");
+	if(pos != selection.npos)
+	{
+		str = "armor";
+		write(sockfd, str.c_str(), str.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok");
+
+		write(sockfd, selection.c_str(), selection.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok"); 
+		cha->Puton_armor(things);
+		things->init(cha);
+		cout << "\n成功穿戴" << selection << endl;
+	}
+	else
+	{
+		str = "arm";
+		write(sockfd, str.c_str(), str.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok");
+
+		write(sockfd, selection.c_str(), selection.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok"); 
+		cha->Puton_arm(things); 
+		things->init(cha);
+		cout << "\n成功穿戴" << selection << endl;
+	}
+ 
 
 	pth_simble = 0;
 	pthread_mutex_unlock(&lock);
 	pthread_cond_signal(&pth_do); 
 }
 
-int takeoff(int sockfd, string selection, int select)
+void takeoff(int sockfd, Character *cha, string selection, Things *things)
 {
 	string str;
 	int n = 0;
 	char buf[MAXLINE];
 
 	pth_simble = 1;
-	str = "takeoff";
+	str = "equipment";
 	write(sockfd, str.c_str(), str.size());
 	pthread_mutex_lock(&lock); 
 
+	memset(buf, 0, MAXLINE);
 	n = read(sockfd, buf, MAXLINE);
 	if(n == 0)
 		print_disconnect(sockfd);
-	str == buf;
+	str = buf;
 	while(str != "ok");
+
+	str = "takeoff";
+	write(sockfd, str.c_str(), str.size()); 
+	memset(buf, 0, MAXLINE);
+	n = read(sockfd, buf, MAXLINE);
+	if(n == 0)
+		print_disconnect(sockfd);
+	str = buf;
+	while(str != "ok"); 
 
 	string::size_type pos = selection.find("armor");
 	if(pos != selection.npos)
+	{
+		str = "armor";
+		write(sockfd, str.c_str(), str.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok");
+
+		write(sockfd, selection.c_str(), selection.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok"); 
 		cha->Takeoff_armor();
+		things->takeoff(cha);
+		cout << "\n成功卸下" << selection << endl;
+	}
 	else
+	{
+		str = "arm";
+		write(sockfd, str.c_str(), str.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok");
+
+		write(sockfd, selection.c_str(), selection.size());
+		memset(buf, 0, MAXLINE);
+		n = read(sockfd, buf, MAXLINE);
+		if(n == 0)
+			print_disconnect(sockfd);
+		str = buf;
+		while(str != "ok"); 
 		cha->Takeoff_arm(); 
+		things->takeoff(cha);
+		cout << "\n成功卸下" << selection << endl;
+	}
 
 	pth_simble = 0;
 	pthread_mutex_unlock(&lock);

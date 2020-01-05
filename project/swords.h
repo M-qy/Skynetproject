@@ -21,7 +21,7 @@ private:
 class Sword2 : public Things
 {
 public:
-    void init(Character* cha);
+    void init(Character *cha);
     void describe();
 	char* get_name();
 	void takeoff(Character *cha);
