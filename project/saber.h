@@ -28,18 +28,20 @@ public:
     int Getattack();
     int Getdefense();
 	char* Getarmname();
+	Things* Getarmptr();
 	char* Getarmorname();
+	Things* Getarmorptr();
     void init(int blood, int attack, int defense);
-    void Ace();
+    int Ace();
     void Bleeding();    //每回合访问此成员函数判断自己是否有中流血
     void Oppo_bleed(int num, int blood);    //自己被标记上流血标记
     void Bleed(int num, int blood, int probability);    //武器带有流血被动技能
     void Unbleed();    //武器不带有流血被动技能
 private:
     string m_name;
-    int m_blood;
-    int m_attack;
-    int m_defense;
+    int m_blood = 1000;
+    int m_attack = 10;
+    int m_defense = 10;
     int bleed_sign = 0;    //触发使对方流血的标记
     int o_bleed_sign =0;    //判断自己是否中流血的标记
     int bleed_num;    //自己中流血后剩下的次数

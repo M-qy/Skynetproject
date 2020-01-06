@@ -20,6 +20,7 @@ using namespace std;
 extern pthread_cond_t pth_do;
 extern pthread_mutex_t lock;
 extern int pth_simble;
+extern int simble;
 
 void print_disconnect(int sockfd);
 

@@ -29,6 +29,7 @@ char* Saber::Getarmname()
 	else
 		return this->m_arm->get_name();
 }
+Things* Saber::Getarmptr(){return this->m_arm;}
 char* Saber::Getarmorname()
 {
 	if(this->m_armor == NULL)
@@ -36,13 +37,14 @@ char* Saber::Getarmorname()
 	else
 		return this->m_armor->get_name();
 }
+Things* Saber::Getarmorptr(){return this->m_armor;}
 void Saber::init(int blood, int attack, int defense)
 {
     this->m_blood = blood;
     this->m_attack = attack;
     this->m_defense = defense;
 }
-void Saber::Ace()
+int Saber::Ace()
 {
     this->m_opponent->Sub_blood(this->m_attack);
     if(this->bleed_sign == 1)
@@ -50,8 +52,12 @@ void Saber::Ace()
         srand((unsigned int)time(NULL));
         int ret = rand()%100 + this->bleed_probability;
         if(ret > this->bleed_probability && ret <= 100)
+		{
             this->m_opponent->Oppo_bleed(this->o_bleed_num, this->o_bleed_blood);
+			return 1;
+		}
     }
+	return 0;
 }
 void Saber::Bleeding()    //每回合访问此成员函数判断自己是否有中流血
 {

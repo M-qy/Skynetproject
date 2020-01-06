@@ -12,7 +12,7 @@ function Sword.find(things)
 	}
 	local switch = selection[things]
 	if switch then
-		local res = switch()
+		return switch()
 	end
 end
 

@@ -61,18 +61,20 @@ int player_init(Character *cha, int sockfd, string name, string job, vector<Thin
     str = "ok";
     write(sockfd, str.c_str(), str.size());
 
-    cha->init(blood, attack, defense);
-
+	int ret;
     memset(buf, 0, MAXLINE);
     n = read(sockfd, buf, MAXLINE);
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
-	int ret = package_find(package, str);
-	if(ret != -1)
+	if(str != "NULL")
 	{
-		cha->Puton_arm(package[ret]->things);
-		package[ret]->things->init(cha);
+		ret = package_find(package, str);
+		if(ret != -1)
+		{
+			cha->Puton_arm(package[ret]->things);
+			package[ret]->things->init(cha);
+		}
 	}
 	str = "ok";
     write(sockfd, str.c_str(), str.size());
@@ -82,12 +84,21 @@ int player_init(Character *cha, int sockfd, string name, string job, vector<Thin
     if(n == 0)
         print_disconnect(sockfd);
     str = buf;
-	ret = package_find(package, str); 
-	if(ret != -1)
+	if(str != "NULL")
 	{
-		cha->Puton_armor(package[ret]->things);
-		package[ret]->things->init(cha);
+		ret = package_find(package, str); 
+		if(ret != -1)
+		{
+			cha->Puton_armor(package[ret]->things);
+			package[ret]->things->init(cha);
+		}
 	}
+	
+	int m_blood = cha->Getblood();
+	int m_attack = cha->Getattack();
+	int m_defense = cha->Getdefense();
+	if(m_blood != blood || m_attack != attack || m_defense != defense)
+		cout << "属性与服务端数据不同！" << endl;
     
     pth_simble = 0;
     pthread_mutex_unlock(&lock);

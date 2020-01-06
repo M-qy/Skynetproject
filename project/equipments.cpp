@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void puton(int sockfd, Character *cha, string selection, Things *things);
+void puton(int sockfd, Character *cha, string selection, Things *things, string arm, string armor);
 void takeoff(int sockfd, Character *cha, string selection, Things *things);
 
 void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
@@ -17,7 +17,7 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 		else
 			cout << "\n您穿戴着" << arm << endl;
 		string armor = cha->Getarmorname();
-		if(arm == "NULL")
+		if(armor == "NULL")
 			cout << "您没有穿戴防具！" << endl;
 		else
 			cout << "您穿戴着" << armor << endl;
@@ -31,10 +31,10 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 		cout << "0、返回" << endl;
 		cout << "\n请输入您的选择：";
 		cin >> select1;
-		string selection = package[select1-1]->things->get_name();
-
 		if(select1 == 0)
 			return;
+		string selection = package[select1-1]->things->get_name();
+
 		cout << "\n您选择了" << selection << endl;
 		int point = 1;
 		if(selection == arm || selection == armor)
@@ -80,7 +80,7 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 						package[select1-1]->things->describe();
 						break;
 					case 2:
-						puton(sockfd, cha, selection, package[select1-1]->things);
+						puton(sockfd, cha, selection, package[select1-1]->things, arm, armor);
 						point = 0;
 						break;
 					default:
@@ -92,7 +92,7 @@ void equipments(int sockfd, Character *cha, vector<Things_str*>&package)
 	}
 }
 
-void puton(int sockfd, Character *cha, string selection, Things *things)
+void puton(int sockfd, Character *cha, string selection, Things *things, string arm, string armor)
 {
 	string str;
 	int n = 0;
@@ -138,6 +138,12 @@ void puton(int sockfd, Character *cha, string selection, Things *things)
 			print_disconnect(sockfd);
 		str = buf;
 		while(str != "ok"); 
+		if(armor != "NULL")
+		{
+			Things* temp = cha->Getarmorptr();
+			cha->Takeoff_armor();
+			temp->takeoff(cha);
+		}
 		cha->Puton_armor(things);
 		things->init(cha);
 		cout << "\n成功穿戴" << selection << endl;
@@ -160,6 +166,12 @@ void puton(int sockfd, Character *cha, string selection, Things *things)
 			print_disconnect(sockfd);
 		str = buf;
 		while(str != "ok"); 
+		if(arm != "NULL")
+		{
+			Things* temp = cha->Getarmptr();
+			cha->Takeoff_arm();
+			temp->takeoff(cha);
+		} 
 		cha->Puton_arm(things); 
 		things->init(cha);
 		cout << "\n成功穿戴" << selection << endl;

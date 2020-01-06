@@ -103,10 +103,9 @@ int Sign_in(int sockfd)
 
 int login(int sockfd)
 {
-    int select, ret;
-
 	while(1)
 	{
+		int select, ret;
 		cout << "\n1、登录游戏 2、注册账号" << endl;
 		cin >> select;
 		switch(select)

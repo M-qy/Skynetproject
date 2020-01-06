@@ -14,7 +14,6 @@ int simble = 0;
 int account;
 struct character_info player;
 Character *cha;
-Saber *saber_ptr;
 vector<Things_str*> package;
 
 void print_disconnect(int sockfd)
@@ -92,9 +91,7 @@ int main()
 				player = character(sockfd, account);
 				cout << "\n欢迎 " << player.job << " " << player.name << " 进入游戏！" << endl;
 				if(player.job == "saber")
-				{
 					cha = new Saber(player.name);
-				}
 				else if(player.job == "archer")
 				{
 					Saber saber(player.name);
@@ -106,7 +103,6 @@ int main()
 					cha = &saber;
 				}
 
-				usleep(10);
 				while(simble == 0);
 				ret = package_init(sockfd, player.name, package);
 				if(ret)

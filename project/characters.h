@@ -28,9 +28,11 @@ public:
     virtual int Getattack() = 0;
     virtual int Getdefense() = 0;
 	virtual char* Getarmname() = 0;
+	virtual Things* Getarmptr() = 0;
 	virtual char* Getarmorname() = 0;
+	virtual Things* Getarmorptr() = 0;
     virtual void init(int blood, int attack, int defense) = 0;
-    virtual void Ace() = 0;
+    virtual int Ace() = 0;
     virtual void Bleeding() = 0;    //每回合访问此成员函数判断自己是否有中流血
     virtual void Oppo_bleed(int num, int blood) = 0;    //自己被标记上流血标记
     virtual void Bleed(int num, int blood, int probability) = 0;    //武器带有流血被动技能
