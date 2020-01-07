@@ -11,6 +11,7 @@ class Saber : public Character
 {
 public:
     Saber(string name);
+	~Saber();
     void Add_blood(int n);
     void Sub_blood(int n);
 	void Sub_equiblood(int n);
@@ -34,6 +35,7 @@ public:
     void init(int blood, int attack, int defense);
     int Ace();
     void Bleeding();    //每回合访问此成员函数判断自己是否有中流血
+	void Setm_bleed();
     void Oppo_bleed(int num, int blood);    //自己被标记上流血标记
     void Bleed(int num, int blood, int probability);    //武器带有流血被动技能
     void Unbleed();    //武器不带有流血被动技能
@@ -42,7 +44,7 @@ private:
     int m_blood = 1000;
     int m_attack = 10;
     int m_defense = 10;
-    int bleed_sign = 0;    //触发使对方流血的标记
+    int bleed_sign = 0;    //武器有流血技能的标记
     int o_bleed_sign =0;    //判断自己是否中流血的标记
     int bleed_num;    //自己中流血后剩下的次数
     int o_bleed_num;    //传给对方流血的次数

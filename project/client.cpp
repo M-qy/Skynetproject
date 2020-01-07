@@ -3,6 +3,7 @@
 #include "player_init.h"
 #include "package.h"
 #include "equipments.h"
+#include "attribute_init.h"
 
 using namespace std;
 
@@ -94,13 +95,9 @@ int main()
 					cha = new Saber(player.name);
 				else if(player.job == "archer")
 				{
-					Saber saber(player.name);
-					cha = &saber;
 				}
 				else if(player.job == "caster")
 				{
-					Saber saber(player.name);
-					cha = &saber;
 				}
 
 				while(simble == 0);
@@ -123,9 +120,7 @@ int main()
 					switch(select)
 					{
 						case 1:
-							cout << "\nblood: " << cha->Getblood() << endl;
-							cout << "attack: " << cha->Getattack() << endl;
-							cout << "defense: " << cha->Getdefense() << endl;
+							attribute(sockfd, cha);
 							break;
 						case 2:
 							equipments(sockfd, cha, package);
@@ -133,9 +128,23 @@ int main()
 						case 3:
 							break;
 						case 4:
+							cha->Takeoff_arm();
+							cha->Takeoff_armor();
+							for(auto it = package.begin(); it != package.end(); ++it)
+							{
+								delete (*it)->things;
+							}
+							delete cha;
 							can_character = 1;
 							break; 
 						case 5:
+							cha->Takeoff_arm();
+							cha->Takeoff_armor();
+							for(auto it = package.begin(); it != package.end(); ++it)
+							{
+								delete (*it)->things;
+							} 
+							delete cha;
 							can_character = 1;
 							can_account = 1;
 							break;

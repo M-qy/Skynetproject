@@ -11,6 +11,7 @@ class Things;
 class Character
 {
 public:
+	virtual ~Character(){};
     virtual void Add_blood(int n) = 0;
     virtual void Add_attack(int n) = 0;
     virtual void Add_defense(int n) = 0;
@@ -34,6 +35,7 @@ public:
     virtual void init(int blood, int attack, int defense) = 0;
     virtual int Ace() = 0;
     virtual void Bleeding() = 0;    //每回合访问此成员函数判断自己是否有中流血
+	virtual void Setm_bleed() = 0;
     virtual void Oppo_bleed(int num, int blood) = 0;    //自己被标记上流血标记
     virtual void Bleed(int num, int blood, int probability) = 0;    //武器带有流血被动技能
     virtual void Unbleed() = 0;    //武器不带有流血被动技能

@@ -28,7 +28,7 @@ void Character::Getarmorname()
 		cout << "您没有穿戴任何防具！" << endl;
 	else
 		cout << "您穿戴了 " << this->m_armor->get_name() << endl;
-}*/
+}
 void Character::init(int blood, int attack, int defense)
 {
 	this->m_blood = blood;
@@ -74,7 +74,7 @@ void Character::Bleed(int num, int blood, int probability)    //武器带有流�
 	this->o_bleed_blood = blood;
 }
 void Character::Unbleed(){this->bleed_sign = 0;}    //武器不带有流血被动技能
-
+*/
 void make_character(int sockfd)
 {
 	string str;

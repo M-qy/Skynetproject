@@ -10,6 +10,7 @@ class Character;
 class Things
 {
 public:
+	virtual ~Things(){}
     virtual void init(Character *cha) = 0;
     virtual void describe() = 0;
 	virtual char* get_name() = 0;

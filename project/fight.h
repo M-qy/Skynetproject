@@ -2,7 +2,9 @@
 #define fight_h
 
 #include "saber.h"
+#include "armors.h"
+#include "swords.h"
 
-void fight(int sockfd, string name, string job);
+void fight(int sockfd, Character *cha, string name, string job);
 
 #endif

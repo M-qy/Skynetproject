@@ -6,6 +6,19 @@ Saber::Saber(string name)
 {
     this->m_name = name;
 }
+Saber::~Saber()
+{
+	if(this->m_arm != NULL)
+	{
+		delete m_arm;
+		this->m_arm = NULL;
+	}
+	if(this->m_armor != NULL)
+	{
+		delete m_armor;
+		this->m_armor = NULL;
+	}
+}
 void Saber::Add_blood(int n){this->m_blood += n;}
 void Saber::Sub_blood(int n){this->m_blood -= (n - this->m_defense);}
 void Saber::Sub_equiblood(int n){this->m_blood -= n;}
@@ -53,11 +66,15 @@ int Saber::Ace()
         int ret = rand()%100 + this->bleed_probability;
         if(ret > this->bleed_probability && ret <= 100)
 		{
-            this->m_opponent->Oppo_bleed(this->o_bleed_num, this->o_bleed_blood);
+            this->m_opponent->Oppo_bleed(this->o_bleed_num, this->o_bleed_blood);    //令本地复制体敌人中流血
 			return 1;
 		}
     }
 	return 0;
+}
+void Saber::Setm_bleed()    //本地复制体敌人用的函数，令玩家中流血
+{
+	this->m_opponent->Oppo_bleed(this->o_bleed_num, this->o_bleed_blood);
 }
 void Saber::Bleeding()    //每回合访问此成员函数判断自己是否有中流血
 {
