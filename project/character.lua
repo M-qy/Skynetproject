@@ -30,7 +30,7 @@ local function make(cID, account, num)
         mysql.dump(res)
         if res[1] == nil then
             account = tonumber(account)
-            res = db:query(string.format("insert into %s (name, id) values (\'%s\', %d)",
+            res = db:query(string.format("insert into %s (name, id, cID) values (\'%s\', %d, 0)",
                         job, name, account))
             mysql.dump(res)
             num = tonumber(num)

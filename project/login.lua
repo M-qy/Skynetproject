@@ -8,7 +8,7 @@ local function register(account, password)
     local db = mysql.connect()
 
     account = tonumber(account)
-    local res = db:query(string.format("insert into account (id, char_num) values (%d, 0)", account))
+    local res = db:query(string.format("insert into account (id, cID, char_num, team) values (%d, 0, 0, 0)", account))
     mysql.dump(res)
     if res["err"] ~= nil then
         db:disconnect()
@@ -68,6 +68,8 @@ function Login.signin(cID)
         return
     elseif res[1]["password"] == password then
         socket.write(cID, "success")
+		res = db:query(string.format("update account set cID = %d where id = %d", cID, account))
+		mysql.dump(res)
         db:disconnect()
         return account
     else

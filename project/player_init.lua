@@ -45,6 +45,9 @@ function Player_init.init(cID)
     else
         socket.write(cID, res[1]["armor"])
     end
+	res = db:query(string.format("update %s set cID = %d where name = \'%s\'", job, cID, name))
+	mysql.dump(res)
+	db:disconnect()
 	return name, job
 end
 

@@ -4,6 +4,7 @@
 #include "package.h"
 #include "equipments.h"
 #include "attribute_init.h"
+#include "fight.h"
 
 using namespace std;
 
@@ -126,6 +127,7 @@ int main()
 							equipments(sockfd, cha, package);
 							break;
 						case 3:
+							fight(sockfd, cha, player.name, player.job);
 							break;
 						case 4:
 							cha->Takeoff_arm();

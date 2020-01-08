@@ -92,6 +92,16 @@ void fight(int sockfd, Character *cha, string name, string job)
 	cha->Lock_opponent(o_cha);
 	o_cha->Lock_opponent(cha);
 
+	str = "ok";
+	write(sockfd, str.c_str(), str.size());
+
+	memset(buf, 0, MAXLINE);
+	n = read(sockfd, buf, MAXLINE);
+	if(n == 0)
+		print_disconnect(sockfd); 
+	str = buf; 
+	while(str != "ok");
+
 	cout << "\n对战开始！" << endl;
 	str = "start";
 	write(sockfd, str.c_str(), str.size());
@@ -230,8 +240,8 @@ void fight(int sockfd, Character *cha, string name, string job)
 			cha->Sub_blood(o_attack);
 			cout << "\n你的对手平A了你！" << endl;
 		}
-		str = "ok";
-		write(sockfd, str.c_str(), str.size());
+		//str = "ok";
+		//write(sockfd, str.c_str(), str.size());
 		memset(buf, 0, MAXLINE);
 		n = read(sockfd, buf, MAXLINE);
 		if(n == 0)
