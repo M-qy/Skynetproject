@@ -70,6 +70,9 @@ function Login.signin(cID)
         socket.write(cID, "success")
 		res = db:query(string.format("update account set cID = %d where id = %d", cID, account))
 		mysql.dump(res)
+		local sID = tonumber(socket.read(cID))
+		res = db:query(string.format("update account set sID = %d where id = %d", sID, account))
+		mysql.dump(res)
         db:disconnect()
         return account
     else

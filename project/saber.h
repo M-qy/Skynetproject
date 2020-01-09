@@ -39,6 +39,7 @@ public:
     void Oppo_bleed(int num, int blood);    //自己被标记上流血标记
     void Bleed(int num, int blood, int probability);    //武器带有流血被动技能
     void Unbleed();    //武器不带有流血被动技能
+	void Init_bleedsign();
 private:
     string m_name;
     int m_blood = 1000;

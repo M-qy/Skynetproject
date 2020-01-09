@@ -88,11 +88,14 @@ int Sign_in(int sockfd)
         cout << "账号或密码错误！" << endl;
         pth_simble = 0;
         pthread_mutex_unlock(&lock);
+		pthread_cond_signal(&pth_do);
         return 0;
     }
     else
     {
         cout << "登录成功！" << endl;
+		str = to_string(sockfd);
+		write(sockfd, str.c_str(), str.size());
         pth_simble = 0;
         pthread_mutex_unlock(&lock);
 		pthread_cond_signal(&pth_do);

@@ -5,13 +5,13 @@ using namespace std;
 void fight(int sockfd, Character *cha, string name, string job)
 {
 	string str;
-    int n = 0;
-    char buf[MAXLINE];
+	int n = 0;
+	char buf[MAXLINE];
 
-    pth_simble = 1;
-    str = "fight";
-    write(sockfd, str.c_str(), str.size());
-    pthread_mutex_lock(&lock); 
+	pth_simble = 1;
+	str = "fight";
+	write(sockfd, str.c_str(), str.size());
+	pthread_mutex_lock(&lock); 
 
 	cout << "\n匹配中。。。" << endl;
 
@@ -67,7 +67,7 @@ void fight(int sockfd, Character *cha, string name, string job)
 		}
 		cha->Puton_arm(things);
 	}
-	
+
 	str = "ok";
 	write(sockfd, str.c_str(), str.size());
 	memset(buf, 0, MAXLINE);
@@ -88,19 +88,10 @@ void fight(int sockfd, Character *cha, string name, string job)
 		o_cha->Puton_armor(things);
 	}
 	int o_attack = o_cha->Getattack();
-		
+
 	cha->Lock_opponent(o_cha);
 	o_cha->Lock_opponent(cha);
-
-	str = "ok";
-	write(sockfd, str.c_str(), str.size());
-
-	memset(buf, 0, MAXLINE);
-	n = read(sockfd, buf, MAXLINE);
-	if(n == 0)
-		print_disconnect(sockfd); 
-	str = buf; 
-	while(str != "ok");
+	int initblood = cha->Getblood();
 
 	cout << "\n对战开始！" << endl;
 	str = "start";
@@ -118,6 +109,7 @@ void fight(int sockfd, Character *cha, string name, string job)
 		if(n == 0)
 			print_disconnect(sockfd); 
 		str = buf;
+		cout << buf << endl;
 		if(str == "surrender")
 		{
 			cout << "\n你的对手投降了！游戏结束！" << endl;
@@ -133,25 +125,25 @@ void fight(int sockfd, Character *cha, string name, string job)
 		{
 			cha->Sub_blood(o_attack);
 			cout << "\n你的对手平A了你！" << endl;
-		}
-		str = "ok";
-		write(sockfd, str.c_str(), str.size());
-		memset(buf, 0, MAXLINE);
-		n = read(sockfd, buf, MAXLINE);
-		if(n == 0)
-			print_disconnect(sockfd); 
-		str = buf; 
-		if(str == "bleed")
-		{
-			o_cha->Setm_bleed();
-			cout << "并且你中了流血！" << endl;
-			cha->Bleeding();
-			cout << "你剩下" << cha->Getblood() << "血！" << endl;
-		}
-		else
-		{
-			cha->Bleeding();
-			cout << "你剩下" << cha->Getblood() << "血！" << endl;
+			str = "ok";
+			write(sockfd, str.c_str(), str.size());
+			memset(buf, 0, MAXLINE);
+			n = read(sockfd, buf, MAXLINE);
+			if(n == 0)
+				print_disconnect(sockfd); 
+			str = buf; 
+			if(str == "bleed")
+			{
+				o_cha->Setm_bleed();
+				cout << "并且你中了流血！" << endl;
+				cha->Bleeding();
+				cout << "你剩下" << cha->Getblood() << "血！" << endl;
+			}
+			else
+			{
+				cha->Bleeding();
+				cout << "你剩下" << cha->Getblood() << "血！" << endl;
+			} 
 		}
 	}
 	else
@@ -159,6 +151,7 @@ void fight(int sockfd, Character *cha, string name, string job)
 	while(1)
 	{
 		int select;
+		cout << "\n你的对手剩下" << o_cha->Getblood() << "血！" << endl;
 		cout << "\n你的回合！\n1、平A 0、投降" << endl;
 		cout << "请输入您的选择：";
 		cin >> select;
@@ -173,13 +166,15 @@ void fight(int sockfd, Character *cha, string name, string job)
 					str = "surrender";
 					write(sockfd, str.c_str(), str.size());
 					delete o_cha; 
+					cha->Add_blood(initblood - cha->Getblood());
+					cha->Init_bleedsign();
 					pth_simble = 0;
 					pthread_mutex_unlock(&lock);
 					pthread_cond_signal(&pth_do); 
 					return;
 				case 1:
 					cout << "\n你平A了对手！" << endl;
-					str == "ace";
+					str = "ace";
 					write(sockfd, str.c_str(), str.size());
 
 					memset(buf, 0, MAXLINE);
@@ -192,12 +187,12 @@ void fight(int sockfd, Character *cha, string name, string job)
 					if(sign == 1)
 					{
 						cout << "并且他中了流血！" << endl;
-						str == "bleed";
+						str = "bleed";
 						write(sockfd, str.c_str(), str.size());
 					}
 					else
 					{
-						str == "unbleed";
+						str = "unbleed";
 						write(sockfd, str.c_str(), str.size());
 					}
 					point = 1;
@@ -218,6 +213,8 @@ void fight(int sockfd, Character *cha, string name, string job)
 			str = "o_surrender";
 			write(sockfd, str.c_str(), str.size());
 			delete o_cha; 
+			cha->Add_blood(initblood - cha->Getblood());
+			cha->Init_bleedsign();
 			pth_simble = 0;
 			pthread_mutex_unlock(&lock);
 			pthread_cond_signal(&pth_do); 
@@ -229,19 +226,19 @@ void fight(int sockfd, Character *cha, string name, string job)
 			str = "over";
 			write(sockfd, str.c_str(), str.size());
 			delete o_cha; 
+			cha->Add_blood(initblood - cha->Getblood());
+			cha->Init_bleedsign();
 			pth_simble = 0;
 			pthread_mutex_unlock(&lock);
 			pthread_cond_signal(&pth_do);
 			return;
- 
+
 		}
 		else if(str == "ace")
 		{
 			cha->Sub_blood(o_attack);
 			cout << "\n你的对手平A了你！" << endl;
 		}
-		//str = "ok";
-		//write(sockfd, str.c_str(), str.size());
 		memset(buf, 0, MAXLINE);
 		n = read(sockfd, buf, MAXLINE);
 		if(n == 0)
@@ -265,6 +262,8 @@ void fight(int sockfd, Character *cha, string name, string job)
 			str = "over";
 			write(sockfd, str.c_str(), str.size());
 			delete o_cha; 
+			cha->Add_blood(initblood - cha->Getblood());
+			cha->Init_bleedsign();
 			pth_simble = 0;
 			pthread_mutex_unlock(&lock);
 			pthread_cond_signal(&pth_do);

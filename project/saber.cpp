@@ -82,7 +82,7 @@ void Saber::Bleeding()    //每回合访问此成员函数判断自己是否有�
     {
         if(this->bleed_num > 0)
         {
-            this->Sub_blood(this->bleed_blood);
+            this->Sub_equiblood(this->bleed_blood);
             this->bleed_num--;
             cout << "你中了流血！-" << this->bleed_blood << "点血！" << endl;
             if(this->bleed_num == 0)
@@ -104,3 +104,4 @@ void Saber::Bleed(int num, int blood, int probability)    //武器带有流血�
     this->o_bleed_blood = blood;
 }
 void Saber::Unbleed(){this->bleed_sign = 0;}    //武器不带有流血被动技能
+void Saber::Init_bleedsign(){this->o_bleed_sign = 0;}

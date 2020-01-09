@@ -13,6 +13,8 @@ function Player_init.init(cID)
     socket.write(cID, "ok")
     local job = socket.read(cID)
     socket.write(cID, "ok")
+	res = db:query(string.format("update account set login_cha = \'%s(%s)\' where cID = %d", name, job, cID))
+	mysql.dump(res)
     local res = db:query(string.format("select * from %s where name = \'%s\'", job, name))
 	mysql.dump(res)
     

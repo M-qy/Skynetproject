@@ -39,6 +39,7 @@ public:
     virtual void Oppo_bleed(int num, int blood) = 0;    //自己被标记上流血标记
     virtual void Bleed(int num, int blood, int probability) = 0;    //武器带有流血被动技能
     virtual void Unbleed() = 0;    //武器不带有流血被动技能
+	virtual void Init_bleedsign() = 0;
 private:
     string m_name;
     int m_blood;

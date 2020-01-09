@@ -24,11 +24,13 @@ function Fight.start(cID, account, name, job)
 			else
 				local temp = math.random(1, 2)
 				_, _, o_name, o_job = string.find(res[1]["teamer"], "(%a+)%((%a+)%)")
+				
 				socket.write(cID, o_name)
 				str = socket.read(cID)
 				while str ~= "ok" do
 				end
 				socket.write(cID, o_job)
+				str = socket.read(cID)
 				while str ~= "ok" do
 				end
 				res = db:query(string.format("select * from %s where name = \'%s\'", o_job, o_name))
@@ -48,51 +50,25 @@ function Fight.start(cID, account, name, job)
 				end
 				o_cID = res[1]["cID"]
 				str = socket.read(cID)
-				while str ~= "ok" do
-				end
-
-				socket.write(o_cID, name)
-				str = socket.read(o_cID)
-				while str ~= "ok" do
-				end
-				socket.write(o_cID, job)
-				str = socket.read(o_cID)
-				while str ~= "ok" do
-				end
-				res = db:query(string.format("select * from %s where name = \'%s\'", job, name))
-				mysql.dump(res)
-				if res[1]["arm"] == nil then
-					socket.write(o_cID, "NULL")
-				else
-					socket.write(o_cID, res[1]["arm"])
-				end
-				str = socket.read(o_cID)
-				while str ~= "ok" do
-				end
-				if res[1]["armor"] == nil then
-					socket.write(o_cID, "NULL")
-				else
-					socket.write(o_cID, res[1]["armor"])
-				end
-				str = socket.read(o_cID)
-				while str ~= "ok" do
-				end
-
-				socket.write(cID, "ok") 
-				socket.write(o_cID, "ok") 
-				str = socket.read(cID)
-				while str ~= "start" do
-				end
-				str = socket.read(o_cID)
 				while str ~= "start" do
 				end
 				if temp == 1 then
+					res = db:query(string.format("update account set offensive = \'first\' where id = %d", account))
+					mysql.dump(res)
+					res = db:query(string.format("update account set offensive = \'second\' where cID = %d", o_cID))
+					mysql.dump(res) 
+				else
+					res = db:query(string.format("update account set offensive = \'second\' where id = %d", account))
+					mysql.dump(res)
+					res = db:query(string.format("update account set offensive = \'first\' where cID = %d", o_cID))
+					mysql.dump(res)
+				end
+				if temp == 1 then
 					socket.write(cID, "first")
-					socket.write(o_cID, "second")
 				else
 					socket.write(cID, "second")
-					socket.write(o_cID, "first")
 				end
+				break
 			end
 			if simble == 10 then
 				socket.write(cID, "default")
@@ -106,23 +82,68 @@ function Fight.start(cID, account, name, job)
 		o_cID = res[1]["cID"]
 		res = db:query(string.format("update account set teamer = \'%s(%s)\' where cID = %d", name, job, o_cID))
 		mysql.dump(res)
-		
-		while str ~= "start" do
-			str = socket.read(cID)
+		res = db:query(string.format("select login_cha from account where cID = %d", o_cID))
+		mysql.dump(res)
+		_, _, o_name, o_job = string.find(res[1]["login_cha"], "(%a+)%((%a+)%)")
+		socket.write(cID, o_name)
+		str = socket.read(cID)
+		while str ~= "ok" do
 		end
+		socket.write(cID, o_job)
+		str = socket.read(cID)
+		while str ~= "ok" do
+		end
+		res = db:query(string.format("select * from %s where name = \'%s\'", o_job, o_name))
+		mysql.dump(res)
+		if res[1]["arm"] == nil then
+			socket.write(cID, "NULL")
+		else
+			socket.write(cID, res[1]["arm"])
+		end
+		str = socket.read(cID)
+		while str ~= "ok" do
+		end
+		if res[1]["armor"] == nil then
+			socket.write(cID, "NULL")
+		else
+			socket.write(cID, res[1]["armor"])
+		end 
+		str = socket.read(cID)
+		while str ~= "start" do
+		end
+		while res[1]["offensive"] == nil do
+			res = db:query(string.format("select offensive from account where cID = %d", cID))
+			mysql.dump(res)
+			skynet.sleep(10)
+		end
+		socket.write(cID, res[1]["offensive"])
 	end
 
 	while true do
+		skynet.error("reading...")
 		str = socket.read(cID)
+		if str == false then
+			res = db:query(string.format("update account set team = 0, teamer = NULL, offensive = NULL where id = %d", account))
+			mysql.dump(res)
+			db:disconnect()
+			return
+		end
+		skynet.error(str)
 		if str == "surrender" then
 			socket.write(o_cID, "surrender")
+			res = db:query(string.format("update account set team = 0, teamer = NULL, offensive = NULL where id = %d", account))
+			mysql.dump(res)
 			db:disconnect()
 			return
 		elseif str == "o_surrender" then
+			res = db:query(string.format("update account set team = 0, teamer = NULL, offensive = NULL where id = %d", account))
+			mysql.dump(res)
 			db:disconnect()
 			return
 		elseif str == "over" then
 			socket.write(o_cID, "over")
+			res = db:query(string.format("update account set team = 0, teamer = NULL, offensive = NULL where id = %d", account))
+			mysql.dump(res)
 			db:disconnect()
 			return
 		elseif str == "ace" then
