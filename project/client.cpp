@@ -38,7 +38,6 @@ void* readthread(void* arg)
 			pthread_cond_wait(&pth_do, &lock);
 
 		memset(buf, 0, MAXLINE);
-		cout << "lock" << endl;
 		simble = 1;
 		n = read(sockfd, buf, MAXLINE);
 		if(n == 0)
@@ -49,7 +48,7 @@ void* readthread(void* arg)
 		}
 		else
 		{
-			cout << "readpthread read:" << buf << endl;
+			//cout << "readpthread read:" << buf << endl;
 		}
 		
 		pthread_mutex_unlock(&lock);
@@ -135,8 +134,11 @@ int main()
 							for(auto it = package.begin(); it != package.end(); ++it)
 							{
 								delete (*it)->things;
+								(*it) = NULL;
 							}
+							package.clear();
 							delete cha;
+							cha = NULL;
 							can_character = 1;
 							break; 
 						case 5:
@@ -145,8 +147,11 @@ int main()
 							for(auto it = package.begin(); it != package.end(); ++it)
 							{
 								delete (*it)->things;
+								(*it) = NULL;
 							} 
+							package.clear();
 							delete cha;
+							cha = NULL;
 							can_character = 1;
 							can_account = 1;
 							break;
